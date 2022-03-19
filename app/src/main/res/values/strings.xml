@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Kotlin Repositories</string>
+    <string name="search">Search</string>
+    <string name="empty_search">There are no results for your search, please try again</string>
+    <string name="no_internet">No Internet connection</string>
+    <string name="unknown_error">Unknown error, please try again in a minute</string>>
+    <string name="search_clear_content_description">Clear</string>
+    <string name="stars">Stars</string>
+    <string name="forks">Forks</string>
+
+</resources>

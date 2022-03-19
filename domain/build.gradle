@@ -1,0 +1,39 @@
+plugins {
+	id 'com.android.library'
+	id 'org.jetbrains.kotlin.android'
+	id 'kotlin-kapt'
+	id 'dagger.hilt.android.plugin'
+}
+
+android {
+	compileSdk 31
+
+	defaultConfig {
+		minSdk 26
+		targetSdk 31
+
+		consumerProguardFiles "consumer-rules.pro"
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_11
+		targetCompatibility JavaVersion.VERSION_11
+	}
+	kotlinOptions {
+		jvmTarget = '1.11'
+	}
+}
+
+dependencies {
+	api (project(":core"))
+	implementation libs.kotlin.coroutines.android
+	implementation libs.android.hilt
+	kapt libs.android.hilt.compiler
+	implementation libs.bundles.networking
+}

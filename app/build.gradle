@@ -1,0 +1,91 @@
+plugins {
+	id 'com.android.application'
+	id 'org.jetbrains.kotlin.android'
+	id 'kotlin-kapt'
+	id 'dagger.hilt.android.plugin'
+}
+
+android {
+	compileSdk 31
+
+	defaultConfig {
+		applicationId "com.matias.kotlinrepositories"
+		minSdk 26
+		targetSdk 31
+		versionCode 1
+		versionName "1.0"
+
+		testInstrumentationRunner "com.matias.kotlinrepositories.MockTestRunner"
+		vectorDrawables {
+			useSupportLibrary true
+		}
+	}
+
+	buildTypes {
+		debug {
+			manifestPlaceholders = [usesCleartextTraffic:"true"]
+		}
+		release {
+			manifestPlaceholders = [usesCleartextTraffic:"false"]
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_11
+		targetCompatibility JavaVersion.VERSION_11
+	}
+	kotlinOptions {
+		jvmTarget = '1.11'
+	}
+	buildFeatures {
+		compose true
+	}
+	composeOptions {
+		kotlinCompilerExtensionVersion libs.versions.compose.get()
+	}
+	packagingOptions {
+		resources {
+			excludes += '/META-INF/{AL2.0,LGPL2.1}'
+		}
+	}
+	testOptions {
+		animationsDisabled = true
+	}
+}
+
+dependencies {
+
+	implementation(project(":domain"))
+	implementation(project(":data"))
+	implementation libs.kotlin.coroutines.android
+	implementation libs.android.coreKtx
+	implementation libs.android.appCompat
+	implementation libs.android.material
+
+	implementation libs.bundles.compose
+	implementation libs.lottie.compose
+
+	implementation libs.android.hilt
+	implementation libs.android.hilt.compose
+
+	kapt libs.android.hilt.compiler
+
+
+	implementation libs.bundles.networking
+
+	implementation libs.bundles.lifecycle
+
+	androidTestImplementation libs.android.test.junit4
+	androidTestImplementation libs.android.test.espresso
+	androidTestImplementation libs.android.test.compose
+
+
+	// For instrumented tests.
+	androidTestImplementation libs.kotlin.coroutines.test
+	androidTestImplementation libs.android.hilt.testing
+
+	kaptAndroidTest libs.android.hilt.compiler
+
+	androidTestImplementation libs.okhttp.mockwebserver
+}
