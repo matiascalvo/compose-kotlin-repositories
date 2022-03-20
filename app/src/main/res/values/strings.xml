@@ -7,5 +7,8 @@
     <string name="search_clear_content_description">Clear</string>
     <string name="stars">Stars</string>
     <string name="forks">Forks</string>
-
+    <string name="home_page">Homepage</string>
+    <string name="repository">Repository</string>
+    <string name="description">Description</string>
+    <string name="back">Back</string>
 </resources>

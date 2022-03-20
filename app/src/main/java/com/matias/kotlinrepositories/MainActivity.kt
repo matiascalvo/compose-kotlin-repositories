@@ -3,7 +3,9 @@ package com.matias.kotlinrepositories
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.matias.kotlinrepositories.ui.screens.home.HomeScreen
+import androidx.compose.material.Surface
+import androidx.navigation.compose.rememberNavController
+import com.matias.kotlinrepositories.ui.navigation.Navigation
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +15,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             KotlinRepositoriesTheme {
-                HomeScreen()
+                Surface {
+                    val navController = rememberNavController()
+                    Navigation(navController)
+                }
             }
         }
     }

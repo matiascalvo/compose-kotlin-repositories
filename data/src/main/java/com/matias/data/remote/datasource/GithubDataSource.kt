@@ -12,6 +12,8 @@ class GithubDataSource @Inject constructor(
         page: Int,
     ) = service.searchRepositories(query = getKotlinQuery(query), page = page, sortBy = "stars")
 
+    fun getRepository(fullName: String) = service.getRepository(fullName)
+
     private fun getKotlinQuery(query: String): String {
         return "$query${if (query.isNotEmpty()) "+" else ""}language:kotlin"
     }

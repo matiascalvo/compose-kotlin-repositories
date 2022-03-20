@@ -36,4 +36,16 @@ class GithubRepositoryImpl @Inject constructor(
         }.map { list -> list.map { mapper.mapToDomainModel(it) } }
             .onSuccess { list -> cache.saveRepos(list) }
     }
+
+    override suspend fun getKotlinRepo(fullName: String): Result<Repo, Exception> {
+        return Result.of {
+            val cachedValue = cache.getRepo(fullName)
+            if (cachedValue != null) {
+                cachedValue
+            } else {
+                val repo = githubDatasource.getRepository(fullName)
+                mapper.mapToDomainModel(repo)
+            }
+        }
+    }
 }
