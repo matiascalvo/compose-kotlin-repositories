@@ -33,7 +33,7 @@ Home | Search | Details
 <img src="/screenshots/home_light.png" width="260"> | <img src="/screenshots/search_light.png" width="260"> | <img src="/screenshots/details_light.png" width="260">
 
 ### 🌚 Dark Mode
-Welcome | Log in | Home
+Home | Search | Details
 --- | --- | --- |
 <img src="/screenshots/home_dark.png" width="260"> | <img src="/screenshots/search_dark.png" width="260"> | <img src="/screenshots/details_dark.png" width="260">
 
