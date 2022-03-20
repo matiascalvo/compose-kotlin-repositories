@@ -28,9 +28,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     fun givenNoConnection_Then_NetworkErrorIsDisplayed() {
         mockWebServer.shutdown()
 
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
         composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.no_internet)), true)
             .assertIsDisplayed()
     }
@@ -38,9 +36,8 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     @Test
     fun givenUnknownError_Then_UnknownErrorIsDisplayed() {
         enqueueContent("", HttpURLConnection.HTTP_BAD_REQUEST)
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
+
         composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.unknown_error)), true)
             .assertIsDisplayed()
     }
@@ -48,9 +45,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     @Test
     fun givenNoSearchTerm_Then_CorrectDataIsDisplayed() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
 
         val lazyColumn = composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG))
 
@@ -62,9 +57,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     @Test
     fun givenNoSearchTerm_When_ScrolledDown_Then_ScrollUpButtonAppears() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(10)
 
@@ -74,9 +67,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     @Test
     fun givenNoSearchTermAndScrolledDown_When_ClickOnScrollUpButton_Then_FirstItemIsDisplayed() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(10)
         composeTestRule.onNode(hasTestTag(SCROLL_TO_TOP_TEST_TAG)).performClick()
@@ -86,12 +77,9 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenNoSearchTerm_When_ScrolledToLastElement_Then_NextPageIsLoadedAndFirstElementOfNextPageIsCorrect() {
-
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         enqueueFile("empty_page_2.json", HttpURLConnection.HTTP_OK)
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(29)
         composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(30)
@@ -104,9 +92,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     fun givenNoSearchTerm_WhenInputChangesToTest_Then_CorrectDataIsLoadedFromBackend() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         enqueueFile("test_page_1.json", HttpURLConnection.HTTP_OK)
-        composeTestRule.setContent {
-            HomeScreen()
-        }
+        setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(TOP_SEARCH_FIELD_TEST_TAG)).performTextInput("test")
         val lazyColumn = composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG))
@@ -114,5 +100,11 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         lazyColumn.onChildAt(0).assert(hasText("kotest/kotest")).assertIsDisplayed()
         lazyColumn.onChildAt(1).assert(hasText("googlecodelabs/android-testing")).assertIsDisplayed()
         lazyColumn.onChildAt(2).assert(hasText("KasperskyLab/Kaspresso")).assertIsDisplayed()
+    }
+
+    private fun setHomeScreen() {
+        composeTestRule.setContent {
+            HomeScreen()
+        }
     }
 }

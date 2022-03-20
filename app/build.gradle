@@ -15,7 +15,7 @@ android {
 		versionCode 1
 		versionName "1.0"
 
-		testInstrumentationRunner "com.matias.kotlinrepositories.MockTestRunner"
+		testInstrumentationRunner "com.matias.kotlinrepositories.util.HiltTestRunner"
 		vectorDrawables {
 			useSupportLibrary true
 		}
@@ -75,7 +75,6 @@ dependencies {
 	implementation libs.bundles.networking
 
 	implementation libs.bundles.lifecycle
-
 	androidTestImplementation libs.android.test.junit4
 	androidTestImplementation libs.android.test.espresso
 	androidTestImplementation libs.android.test.compose
