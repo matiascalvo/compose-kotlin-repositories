@@ -14,11 +14,11 @@ import com.matias.data.paging.SearchPagingSource
 import com.matias.data.remote.datasource.GithubDataSource
 import com.matias.domain.model.Repo
 import com.matias.domain.repositories.GithubRepository
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class GithubRepositoryImpl @Inject constructor(
     private val githubDatasource: GithubDataSource,
@@ -30,7 +30,7 @@ class GithubRepositoryImpl @Inject constructor(
     override fun getKotlinRepos(): Flow<PagingData<Repo>> {
         val pagingSourceFactory = { db.repoDao().getAll() }
         return Pager(
-            config = PagingConfig(pageSize = Constants.ELEMENTS_PER_PAGE),
+            config = getPagingConfig(),
             remoteMediator = ReposRemoteMediator(
                 dataSource = githubDatasource,
                 database = db,
@@ -42,12 +42,18 @@ class GithubRepositoryImpl @Inject constructor(
 
     override fun searchKotlinRepos(query: String): Flow<PagingData<Repo>> {
         return Pager(
-            config = PagingConfig(pageSize = Constants.ELEMENTS_PER_PAGE),
+            config = getPagingConfig(),
             pagingSourceFactory = {
                 SearchPagingSource(dataSource = githubDatasource, query = query)
             }
         ).flow
     }
+
+    fun getPagingConfig() = PagingConfig(
+        pageSize = Constants.ELEMENTS_PER_PAGE,
+        prefetchDistance = Constants.ELEMENTS_PER_PAGE / 2,
+        initialLoadSize = Constants.ELEMENTS_PER_PAGE
+    )
 
     override suspend fun getKotlinRepo(owner: String, name: String): Result<Repo, Exception> =
         withContext(dispatcher) {
