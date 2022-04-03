@@ -5,18 +5,26 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onChildAt
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.printToLog
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
+import com.matias.kotlinrepositories.util.RequestDispatcher
 import dagger.hilt.android.testing.HiltAndroidTest
-import java.net.HttpURLConnection
+import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
 class SearchScreenIntegrationTest : BaseMockWebserverTest() {
+
+    lateinit var requestDispatcher: RequestDispatcher
+
+    @Before
+    override fun setUp() {
+        super.setUp()
+        requestDispatcher = RequestDispatcher()
+        mockWebServer.dispatcher = requestDispatcher
+    }
 
     @Test
     fun givenNoSearchTerm_Then_EmptyStateIsShown() {
@@ -29,10 +37,7 @@ class SearchScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenNoSearchTerm_WhenInputChangesToTest_Then_CorrectDataIsLoadedFromBackend() {
-        enqueueFile("test_page_1.json", HttpURLConnection.HTTP_OK)
         setScreen()
-
-        composeTestRule.onRoot().printToLog("pampa")
 
         composeTestRule.onNode(hasText(getString(R.string.search))).performTextInput("test")
         val lazyColumn = composeTestRule.onNode(hasTestTag(REPO_LIST))

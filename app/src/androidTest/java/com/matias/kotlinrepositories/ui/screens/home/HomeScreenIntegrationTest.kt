@@ -10,12 +10,22 @@ import androidx.compose.ui.test.performScrollToIndex
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
+import com.matias.kotlinrepositories.util.RequestDispatcher
 import dagger.hilt.android.testing.HiltAndroidTest
-import java.net.HttpURLConnection
+import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
 class HomeScreenIntegrationTest : BaseMockWebserverTest() {
+
+    lateinit var requestDispatcher: RequestDispatcher
+
+    @Before
+    override fun setUp() {
+        super.setUp()
+        requestDispatcher = RequestDispatcher()
+        mockWebServer.dispatcher = requestDispatcher
+    }
 
     @Test
     fun givenNoConnection_Then_NetworkErrorIsDisplayed() {
@@ -28,7 +38,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenUnknownError_Then_UnknownErrorIsDisplayed() {
-        enqueueContent("", HttpURLConnection.HTTP_BAD_REQUEST)
+        requestDispatcher.isEnabled = false
         setHomeScreen()
 
         composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.unknown_error_try_again)), true)
@@ -37,7 +47,6 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenNoSearchTerm_Then_CorrectDataIsDisplayed() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
         val lazyColumn = composeTestRule.onNode(hasTestTag(REPO_LIST))
@@ -49,7 +58,6 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenNoSearchTerm_When_ScrolledDown_Then_ScrollUpButtonAppears() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(10)
@@ -59,7 +67,6 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenNoSearchTermAndScrolledDown_When_ClickOnScrollUpButton_Then_FirstItemIsDisplayed() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(10)
@@ -70,8 +77,6 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenNoSearchTerm_When_ScrolledToLastElement_Then_NextPageIsLoadedAndFirstElementOfNextPageIsCorrect() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
-        enqueueFile("empty_page_2.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
         composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(29)

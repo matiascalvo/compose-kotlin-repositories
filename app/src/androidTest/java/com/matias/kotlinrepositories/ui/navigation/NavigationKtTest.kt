@@ -21,7 +21,7 @@ class NavigationKtTest : BaseMockWebserverTest() {
 
     @Test
     fun given_NoAction_Then_CurrentDestinationIsHome() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        enqueueFile("empty_search_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
         assertEquals(Screen.Home.route, navController.currentDestination?.route)
@@ -29,7 +29,7 @@ class NavigationKtTest : BaseMockWebserverTest() {
 
     @Test
     fun when_ClickedOnFirstElement_Then_CurrentDestinationIsDetails() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        enqueueFile("empty_search_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
         clickFirstItem()
@@ -41,7 +41,7 @@ class NavigationKtTest : BaseMockWebserverTest() {
 
     @Test
     fun givenClickedOnFirstItem_When_ClickedOnBack_Then_CurrentDestinationIsHome() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        enqueueFile("empty_search_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
         clickFirstItem()
@@ -53,7 +53,7 @@ class NavigationKtTest : BaseMockWebserverTest() {
 
     @Test
     fun when_ClickedOnSearch_Then_CurrentDestinationIsSearch() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        enqueueFile("empty_search_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
         clickSearch()
@@ -63,7 +63,7 @@ class NavigationKtTest : BaseMockWebserverTest() {
 
     @Test
     fun givenClickedOnSearch_When_ClickedOnBack_Then_CurrentDestinationIsHome() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        enqueueFile("empty_search_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
         clickSearch()
