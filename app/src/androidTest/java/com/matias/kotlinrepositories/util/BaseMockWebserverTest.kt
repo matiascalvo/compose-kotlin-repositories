@@ -1,7 +1,7 @@
 package com.matias.kotlinrepositories.util
 
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.matias.kotlinrepositories.util.junit.Rule.BaseIdlingTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -17,26 +17,22 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @OptIn(ExperimentalCoroutinesApi::class)
-abstract class BaseMockWebserverTest : BaseHiltTest() {
+abstract class BaseMockWebserverTest : BaseIdlingTest() {
 
     @Inject
     protected lateinit var okHttp: OkHttpClient
     protected val mockWebServer = MockWebServer()
-    private lateinit var idlingResource: OkHttp3IdlingResource
 
     @Before
     override fun setUp() {
         super.setUp()
-        idlingResource = OkHttp3IdlingResource.create("okhttp", okHttp)
         mockWebServer.start(8080)
-        IdlingRegistry.getInstance().register(idlingResource)
     }
 
     @After
     override fun tearDown() {
         super.tearDown()
         mockWebServer.shutdown()
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     protected fun enqueueContent(content: String, code: Int = HttpURLConnection.HTTP_OK) {

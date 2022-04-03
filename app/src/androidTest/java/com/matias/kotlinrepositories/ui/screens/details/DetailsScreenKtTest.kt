@@ -3,21 +3,16 @@ package com.matias.kotlinrepositories.ui.screens.details
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.matias.domain.model.fakeRepo1
-import com.matias.kotlinrepositories.MainActivity
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
 class DetailsScreenKtTest : BaseMockWebserverTest() {
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Before
     override fun setUp() {

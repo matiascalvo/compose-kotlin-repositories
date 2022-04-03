@@ -1,9 +1,12 @@
 package com.matias.domain.repositories
 
+import androidx.paging.PagingData
 import com.github.kittinunf.result.Result
 import com.matias.domain.model.Repo
+import kotlinx.coroutines.flow.Flow
 
 interface GithubRepository {
-    suspend fun getKotlinRepos(query: String, page: Int = 1): Result<List<Repo>, Exception>
-    suspend fun getKotlinRepo(fullName: String): Result<Repo, Exception>
+    fun getKotlinRepos(): Flow<PagingData<Repo>>
+    fun searchKotlinRepos(query: String): Flow<PagingData<Repo>>
+    suspend fun getKotlinRepo(owner: String, name: String): Result<Repo, Exception>
 }

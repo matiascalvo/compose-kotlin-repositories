@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 
-const val TOP_SEARCH_FIELD_TEST_TAG = "top_search_fieldtest_tag"
+const val TOP_SEARCH_FIELD_TEST_TAG = "top_search_field_test_tag"
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -41,12 +41,14 @@ fun TopSearchBar(
     searchText: String = "",
     placeholderText: String = "",
     onSearchTextChanged: (String) -> Unit = {},
-    onClearClick: () -> Unit = {}
+    onClearClick: () -> Unit = {},
+    onNavigateUp: () -> Unit = {}
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     TopAppBar(
         title = { Text("") },
+        navigationIcon = { NavigateUp(onNavigateUp) },
         actions = {
             OutlinedTextField(
                 modifier = Modifier

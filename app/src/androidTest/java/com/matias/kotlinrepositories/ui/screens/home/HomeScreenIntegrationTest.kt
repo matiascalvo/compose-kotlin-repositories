@@ -4,25 +4,18 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
-import androidx.compose.ui.test.performTextInput
-import com.matias.kotlinrepositories.MainActivity
 import com.matias.kotlinrepositories.R
-import com.matias.kotlinrepositories.ui.composables.TOP_SEARCH_FIELD_TEST_TAG
+import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import java.net.HttpURLConnection
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
 class HomeScreenIntegrationTest : BaseMockWebserverTest() {
-
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
     fun givenNoConnection_Then_NetworkErrorIsDisplayed() {
@@ -38,7 +31,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         enqueueContent("", HttpURLConnection.HTTP_BAD_REQUEST)
         setHomeScreen()
 
-        composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.unknown_error)), true)
+        composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.unknown_error_try_again)), true)
             .assertIsDisplayed()
     }
 
@@ -47,7 +40,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
-        val lazyColumn = composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG))
+        val lazyColumn = composeTestRule.onNode(hasTestTag(REPO_LIST))
 
         lazyColumn.onChildAt(0).assert(hasText("square/okhttp")).assertIsDisplayed()
         lazyColumn.onChildAt(1).assert(hasText("JetBrains/kotlin")).assertIsDisplayed()
@@ -59,7 +52,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(10)
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(10)
 
         composeTestRule.onNode(hasTestTag(SCROLL_TO_TOP_TEST_TAG)).assertIsDisplayed()
     }
@@ -69,10 +62,10 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(10)
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(10)
         composeTestRule.onNode(hasTestTag(SCROLL_TO_TOP_TEST_TAG)).performClick()
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).onChildAt(0).assert(hasText("square/okhttp"))
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).onChildAt(0).assert(hasText("square/okhttp"))
     }
 
     @Test
@@ -81,25 +74,11 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         enqueueFile("empty_page_2.json", HttpURLConnection.HTTP_OK)
         setHomeScreen()
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(29)
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).performScrollToIndex(30)
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(29)
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(30)
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).onChildAt(0)
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).onChildAt(0)
             .assert(hasText("YiiGuxing/TranslationPlugin"))
-    }
-
-    @Test
-    fun givenNoSearchTerm_WhenInputChangesToTest_Then_CorrectDataIsLoadedFromBackend() {
-        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
-        enqueueFile("test_page_1.json", HttpURLConnection.HTTP_OK)
-        setHomeScreen()
-
-        composeTestRule.onNode(hasTestTag(TOP_SEARCH_FIELD_TEST_TAG)).performTextInput("test")
-        val lazyColumn = composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG))
-
-        lazyColumn.onChildAt(0).assert(hasText("kotest/kotest")).assertIsDisplayed()
-        lazyColumn.onChildAt(1).assert(hasText("googlecodelabs/android-testing")).assertIsDisplayed()
-        lazyColumn.onChildAt(2).assert(hasText("KasperskyLab/Kaspresso")).assertIsDisplayed()
     }
 
     private fun setHomeScreen() {

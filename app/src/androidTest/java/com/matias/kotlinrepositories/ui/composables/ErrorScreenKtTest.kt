@@ -1,20 +1,14 @@
 package com.matias.kotlinrepositories.ui.composables
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.matias.kotlinrepositories.MainActivity
 import com.matias.kotlinrepositories.R
-import com.matias.kotlinrepositories.util.BaseHiltTest
+import com.matias.kotlinrepositories.util.BaseComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-class ErrorScreenKtTest : BaseHiltTest() {
-
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+class ErrorScreenKtTest : BaseComposeTest() {
 
     @Test
     fun network_error_displays_correct_message() {
@@ -32,14 +26,14 @@ class ErrorScreenKtTest : BaseHiltTest() {
             UnknownErrorScreen()
         }
         composeTestRule
-            .onNodeWithText(composeTestRule.activity.getString(R.string.unknown_error))
+            .onNodeWithText(composeTestRule.activity.getString(R.string.unknown_error_try_again))
             .assertIsDisplayed()
     }
 
     @Test
     fun empty_state_displays_correct_message() {
         composeTestRule.setContent {
-            EmptySearchScreen()
+            EmptyResultsSearchScreen()
         }
         composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.empty_search))

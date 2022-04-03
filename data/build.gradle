@@ -36,4 +36,7 @@ dependencies {
 	implementation libs.android.hilt
 	kapt libs.android.hilt.compiler
 	implementation libs.bundles.networking
+
+	implementation libs.bundles.room
+	kapt libs.room.compiler
 }

@@ -35,5 +35,6 @@ dependencies {
 	implementation libs.kotlin.coroutines.android
 	implementation libs.android.hilt
 	kapt libs.android.hilt.compiler
-	implementation libs.bundles.networking
+
+	api libs.paging.common
 }

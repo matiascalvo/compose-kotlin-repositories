@@ -6,11 +6,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,33 +25,69 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.matias.domain.model.NoInternetConnectionException
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 
 @Composable
-fun NetworkErrorScreen() {
-    ErrorScreen(R.raw.animation_cat_with_cable, R.string.no_internet)
+fun UndefinedErrorScreen(modifier: Modifier = Modifier, e: Throwable, onClickRetry: () -> Unit = {}) {
+    when (e) {
+        is NoInternetConnectionException -> NetworkErrorScreen(modifier, onClickRetry)
+        else -> UnknownErrorScreen(modifier, onClickRetry)
+    }
 }
 
 @Composable
-fun UnknownErrorScreen() {
-    ErrorScreen(R.raw.animation_error, R.string.unknown_error)
+fun NetworkErrorScreen(modifier: Modifier = Modifier, onClickRetry: () -> Unit = {}) {
+    ErrorScreen(
+        modifier = modifier,
+        animation = R.raw.animation_cat_with_cable,
+        res = R.string.no_internet,
+        onClickRetry = onClickRetry
+    )
 }
 
 @Composable
-fun EmptySearchScreen() {
-    ErrorScreen(R.raw.animation_empty_state, R.string.empty_search)
+fun UnknownErrorScreen(modifier: Modifier = Modifier, onClickRetry: (() -> Unit)? = {}) {
+    ErrorScreen(
+        modifier = modifier,
+        animation = R.raw.animation_error,
+        res = R.string.unknown_error_try_again,
+        onClickRetry = onClickRetry
+    )
 }
 
 @Composable
-private fun ErrorScreen(@RawRes animation: Int, @StringRes res: Int) {
+fun EmptyResultsSearchScreen(modifier: Modifier = Modifier) {
+    ErrorScreen(
+        modifier = modifier,
+        animation = R.raw.animation_empty_state,
+        res = R.string.empty_search,
+    )
+}
+
+@Composable
+fun EmptyQuerySearchScreen(modifier: Modifier = Modifier) {
+    ErrorScreen(
+        modifier = modifier,
+        animation = R.raw.animation_magnifier,
+        res = R.string.start_searching,
+    )
+}
+
+@Composable
+private fun ErrorScreen(
+    modifier: Modifier = Modifier,
+    @RawRes animation: Int,
+    @StringRes res: Int,
+    onClickRetry: (() -> Unit)? = null
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animation))
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(32.dp)
     ) {
         LottieAnimation(
@@ -66,6 +102,11 @@ private fun ErrorScreen(@RawRes animation: Int, @StringRes res: Int) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
+        onClickRetry?.let {
+            OutlinedButton(onClick = it) {
+                Text(text = stringResource(id = R.string.try_again))
+            }
+        }
     }
 }
 
@@ -81,7 +122,7 @@ private fun ErrorScreen(@RawRes animation: Int, @StringRes res: Int) {
 private fun Preview() {
     KotlinRepositoriesTheme {
         Surface {
-            EmptySearchScreen()
+            EmptyResultsSearchScreen()
         }
     }
 }

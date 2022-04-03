@@ -28,7 +28,7 @@ class DetailsScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _state.value = DetailsScreenState(screenStatus = ScreenStatus.IDLE)
-            repository.getKotlinRepo("$owner/$name")
+            repository.getKotlinRepo(owner, name)
                 .onSuccess { repo ->
                     _state.value = DetailsScreenState(
                         screenStatus = ScreenStatus.IDLE,

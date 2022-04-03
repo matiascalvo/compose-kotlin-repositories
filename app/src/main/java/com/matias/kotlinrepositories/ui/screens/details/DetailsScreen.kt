@@ -12,15 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +40,8 @@ import coil.request.ImageRequest
 import com.matias.domain.model.Repo
 import com.matias.domain.model.fakeRepo2
 import com.matias.kotlinrepositories.R
-import com.matias.kotlinrepositories.ui.composables.CustomCircularProgressBar
+import com.matias.kotlinrepositories.ui.composables.LoadingScreen
+import com.matias.kotlinrepositories.ui.composables.NavigateUp
 import com.matias.kotlinrepositories.ui.composables.NetworkErrorScreen
 import com.matias.kotlinrepositories.ui.composables.SmallIconWithAmount
 import com.matias.kotlinrepositories.ui.composables.UnknownErrorScreen
@@ -61,18 +59,9 @@ fun DetailsScreen(navigateUp: () -> Unit) {
 fun DetailsScreen(viewModel: DetailsScreenViewModel, navigateUp: () -> Unit) {
     val state by viewModel.state.collectAsState()
     Scaffold(topBar = {
-        Surface() {
-        }
         TopAppBar(
             title = { Text("") },
-            navigationIcon = {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back),
-                    )
-                }
-            }
+            navigationIcon = { NavigateUp(onClick = navigateUp) }
         )
     }) {
         DetailsScreen(state)
@@ -84,7 +73,7 @@ fun DetailsScreen(state: DetailsScreenState) {
     when (state.screenStatus) {
         ScreenStatus.NO_INTERNET -> NetworkErrorScreen()
         ScreenStatus.ERROR -> UnknownErrorScreen()
-        ScreenStatus.LOADING -> CustomCircularProgressBar()
+        ScreenStatus.LOADING -> LoadingScreen(modifier = Modifier.fillMaxSize())
         ScreenStatus.IDLE -> DetailsScreen(state.repo)
     }
 }

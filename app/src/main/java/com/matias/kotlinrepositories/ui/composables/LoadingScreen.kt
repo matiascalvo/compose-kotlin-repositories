@@ -13,15 +13,13 @@ import androidx.compose.ui.unit.dp
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 
 @Composable
-fun CustomCircularProgressBar(shouldShow: Boolean = true) {
-    if (shouldShow) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(32.dp)
-                    .align(Alignment.Center)
-            )
-        }
+fun LoadingScreen(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(32.dp)
+                .align(Alignment.Center)
+        )
     }
 }
 
@@ -36,6 +34,6 @@ fun CustomCircularProgressBar(shouldShow: Boolean = true) {
 @Composable
 private fun Preview() {
     KotlinRepositoriesTheme {
-        CustomCircularProgressBar(true)
+        LoadingScreen(Modifier.fillMaxSize())
     }
 }

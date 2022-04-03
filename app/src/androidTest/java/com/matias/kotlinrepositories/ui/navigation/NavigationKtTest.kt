@@ -1,26 +1,21 @@
 package com.matias.kotlinrepositories.ui.navigation
 
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.test.espresso.Espresso
-import com.matias.kotlinrepositories.MainActivity
-import com.matias.kotlinrepositories.ui.screens.home.HOME_LIST_TEST_TAG
+import com.matias.kotlinrepositories.R
+import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import java.net.HttpURLConnection
 import org.junit.Assert.assertEquals
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
 class NavigationKtTest : BaseMockWebserverTest() {
-
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private lateinit var navController: NavHostController
 
@@ -33,11 +28,11 @@ class NavigationKtTest : BaseMockWebserverTest() {
     }
 
     @Test
-    fun given_emptySearch_When_ClickedOnFirstElement_Then_CurrentDestinationIsDetails() {
+    fun when_ClickedOnFirstElement_Then_CurrentDestinationIsDetails() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).onChildAt(0).performClick()
+        clickFirstItem()
 
         assertEquals(Screen.Details.route, navController.currentDestination?.route)
         assertEquals("square", navController.backQueue.last().arguments?.get("owner").toString())
@@ -45,14 +40,51 @@ class NavigationKtTest : BaseMockWebserverTest() {
     }
 
     @Test
-    fun given_emptySearchAndClickedOnFirstItem_When_ClickedOnBack_Then_CurrentDestinationIsHome() {
+    fun givenClickedOnFirstItem_When_ClickedOnBack_Then_CurrentDestinationIsHome() {
         enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
         setMainNavigation()
 
-        composeTestRule.onNode(hasTestTag(HOME_LIST_TEST_TAG)).onChildAt(0).performClick()
-        Espresso.pressBack()
+        clickFirstItem()
+
+        clickBack()
 
         assertEquals(Screen.Home.route, navController.currentDestination?.route)
+    }
+
+    @Test
+    fun when_ClickedOnSearch_Then_CurrentDestinationIsSearch() {
+        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        setMainNavigation()
+
+        clickSearch()
+
+        assertEquals(Screen.Search.route, navController.currentDestination?.route)
+    }
+
+    @Test
+    fun givenClickedOnSearch_When_ClickedOnBack_Then_CurrentDestinationIsHome() {
+        enqueueFile("empty_page_1.json", HttpURLConnection.HTTP_OK)
+        setMainNavigation()
+
+        clickSearch()
+
+        clickBack()
+
+        assertEquals(Screen.Home.route, navController.currentDestination?.route)
+    }
+
+    private fun clickFirstItem() {
+        composeTestRule.onNode(hasTestTag(REPO_LIST)).onChildAt(0).performClick()
+    }
+
+    private fun clickSearch() {
+        composeTestRule.onNode(hasContentDescription(composeTestRule.activity.getString(R.string.search)))
+            .performClick()
+    }
+
+    private fun clickBack() {
+        composeTestRule.onNode(hasContentDescription(composeTestRule.activity.getString(R.string.back)))
+            .performClick()
     }
 
     private fun setMainNavigation() {

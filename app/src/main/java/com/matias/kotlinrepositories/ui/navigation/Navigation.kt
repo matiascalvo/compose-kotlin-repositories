@@ -10,11 +10,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.matias.kotlinrepositories.ui.screens.details.DetailsScreen
 import com.matias.kotlinrepositories.ui.screens.home.HomeScreen
+import com.matias.kotlinrepositories.ui.screens.search.SearchScreen
 
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         addHome(navController)
+        addSearch(navController)
         addDetails(navController)
     }
 }
@@ -24,7 +26,19 @@ private fun NavGraphBuilder.addHome(
 ) {
     composable(route = Screen.Home.route) {
         HomeScreen(
-            onDetails = { repo -> navController.navigate(Screen.Details.createRoute(repo)) }
+            onDetails = { repo -> navController.navigate(Screen.Details.createRoute(repo)) },
+            onSearch = { navController.navigate(Screen.Search.route) }
+        )
+    }
+}
+
+private fun NavGraphBuilder.addSearch(
+    navController: NavController,
+) {
+    composable(route = Screen.Search.route) {
+        SearchScreen(
+            onDetails = { repo -> navController.navigate(Screen.Details.createRoute(repo)) },
+            onNavigateUp = { navController.navigateUp() }
         )
     }
 }

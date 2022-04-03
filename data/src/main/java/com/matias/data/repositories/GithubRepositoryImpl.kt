@@ -1,56 +1,58 @@
 package com.matias.data.repositories
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.map
-import com.github.kittinunf.result.onSuccess
 import com.matias.core.di.IoDispatcher
+import com.matias.data.Constants
+import com.matias.data.local.db.RepoDatabase
+import com.matias.data.local.mappers.RepoDboMapper
+import com.matias.data.paging.ReposRemoteMediator
+import com.matias.data.paging.SearchPagingSource
 import com.matias.data.remote.datasource.GithubDataSource
-import com.matias.data.remote.model.mappers.RepoDtoMapper
-import com.matias.domain.model.NoInternetConnectionException
 import com.matias.domain.model.Repo
 import com.matias.domain.repositories.GithubRepository
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class GithubRepositoryImpl @Inject constructor(
     private val githubDatasource: GithubDataSource,
-    private val mapper: RepoDtoMapper,
-    private val cache: RepositoryCache,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    private val db: RepoDatabase,
+    private val dboMapper: RepoDboMapper,
 ) : GithubRepository {
 
-    @Suppress("TooGenericExceptionCaught")
-    override suspend fun getKotlinRepos(query: String, page: Int): Result<List<Repo>, Exception> =
-        withContext(dispatcher) {
-            try {
-                val result = githubDatasource.searchRepositories(
-                    query = query.trim(),
-                    page = page,
-                ).items
-                Result.success(result)
-            } catch (e: Exception) {
-                when (e) {
-                    is ConnectException, is SocketTimeoutException, is UnknownHostException ->
-                        Result.failure(NoInternetConnectionException())
-                    else -> Result.failure(e)
-                }
-            }.map { list -> list.map { mapper.mapToDomainModel(it) } }
-                .onSuccess { list -> cache.saveRepos(list) }
-        }
+    override fun getKotlinRepos(): Flow<PagingData<Repo>> {
+        val pagingSourceFactory = { db.repoDao().getAll() }
+        return Pager(
+            config = PagingConfig(pageSize = Constants.ELEMENTS_PER_PAGE),
+            remoteMediator = ReposRemoteMediator(
+                dataSource = githubDatasource,
+                database = db,
+                mapper = dboMapper,
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow.map { page -> page.map { dboMapper.mapToDomainModel(it) } }
+    }
 
-    override suspend fun getKotlinRepo(fullName: String): Result<Repo, Exception> = withContext(dispatcher) {
-        Result.of {
-            val cachedValue = cache.getRepo(fullName)
-            if (cachedValue != null) {
-                cachedValue
-            } else {
-                val repo = githubDatasource.getRepository(fullName)
-                mapper.mapToDomainModel(repo)
+    override fun searchKotlinRepos(query: String): Flow<PagingData<Repo>> {
+        return Pager(
+            config = PagingConfig(pageSize = Constants.ELEMENTS_PER_PAGE),
+            pagingSourceFactory = {
+                SearchPagingSource(dataSource = githubDatasource, query = query)
+            }
+        ).flow
+    }
+
+    override suspend fun getKotlinRepo(owner: String, name: String): Result<Repo, Exception> =
+        withContext(dispatcher) {
+            Result.of {
+                githubDatasource.getRepository(owner, name)
             }
         }
-    }
 }

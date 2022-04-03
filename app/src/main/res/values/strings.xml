@@ -2,8 +2,10 @@
     <string name="app_name">Kotlin Repositories</string>
     <string name="search">Search</string>
     <string name="empty_search">There are no results for your search, please try again</string>
+    <string name="start_searching">Start searching for cool Kotlin repositories</string>
     <string name="no_internet">No Internet connection</string>
-    <string name="unknown_error">Unknown error, please try again in a minute</string>>
+    <string name="unknown_error_try_again">Unknown error, please try again in a minute</string>>
+    <string name="unknown_error">Unknown error</string>>
     <string name="search_clear_content_description">Clear</string>
     <string name="stars">Stars</string>
     <string name="forks">Forks</string>
@@ -11,4 +13,5 @@
     <string name="repository">Repository</string>
     <string name="description">Description</string>
     <string name="back">Back</string>
+    <string name="try_again">Try Again</string>
 </resources>

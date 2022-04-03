@@ -1,7 +1,7 @@
 package com.matias.data.remote.services
 
 import com.matias.data.remote.model.RepoDto
-import com.matias.data.remote.model.ResultList
+import com.matias.data.remote.model.ResultListDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -13,8 +13,11 @@ interface SearchServiceApi {
         @Query("q") query: String,
         @Query("page") page: Int,
         @Query("s") sortBy: String,
-    ): ResultList<RepoDto>
+    ): ResultListDto<RepoDto>
 
-    @GET("repositories/{fullName}")
-    fun getRepository(@Path("fullName") fullName: String): RepoDto
+    @GET("repos/{owner}/{name}")
+    suspend fun getRepository(
+        @Path("owner") owner: String,
+        @Path("name") name: String,
+    ): RepoDto
 }
