@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.matias.data.local.model.RepoDbo
 import com.matias.data.local.model.RepoRemoteKeysDbo
 
-@Database(entities = [RepoDbo::class, RepoRemoteKeysDbo::class], version = 1)
+@Database(entities = [RepoDbo::class, RepoRemoteKeysDbo::class], version = 1, exportSchema = false)
 abstract class RepoDatabase : RoomDatabase() {
 
     abstract fun repoDao(): RepoDao
