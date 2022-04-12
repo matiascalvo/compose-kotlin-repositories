@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kittinunf.result.onFailure
 import com.github.kittinunf.result.onSuccess
-import com.matias.domain.repositories.GithubRepository
+import com.matias.domain.usecases.GetRepoUseCase
 import com.matias.kotlinrepositories.ui.extensions.getScreenStatusDependingOnError
 import com.matias.kotlinrepositories.ui.screens.ScreenStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: GithubRepository,
+    private val getRepoUseCase: GetRepoUseCase,
 ) : ViewModel() {
     private val owner: String = savedStateHandle.get("owner")!!
     private val name: String = savedStateHandle.get("name")!!
@@ -28,7 +28,7 @@ class DetailsScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _state.value = DetailsScreenState(screenStatus = ScreenStatus.IDLE)
-            repository.getKotlinRepo(owner, name)
+            getRepoUseCase(owner, name)
                 .onSuccess { repo ->
                     _state.value = DetailsScreenState(
                         screenStatus = ScreenStatus.IDLE,

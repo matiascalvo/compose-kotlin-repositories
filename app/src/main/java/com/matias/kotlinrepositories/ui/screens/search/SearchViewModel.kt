@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.matias.domain.model.Repo
-import com.matias.domain.repositories.GithubRepository
+import com.matias.domain.usecases.SearchReposUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.update
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repo: GithubRepository,
+    private val searchReposUseCase: SearchReposUseCase,
     @Named("debounceMs") private val debounceMs: Long,
 ) : ViewModel() {
 
@@ -39,7 +39,7 @@ class SearchViewModel @Inject constructor(
         .debounce { if (it == "") 0L else debounceMs }
         .flatMapLatest { query ->
             _state.update { it.copy(isDebouncing = false) }
-            repo.searchKotlinRepos(query = query)
+            searchReposUseCase(query = query)
         }.cachedIn(viewModelScope)
 
     fun onSearchUpdated(value: String) {
