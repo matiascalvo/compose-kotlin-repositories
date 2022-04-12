@@ -49,7 +49,7 @@ class GithubRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    fun getPagingConfig() = PagingConfig(
+    private fun getPagingConfig() = PagingConfig(
         pageSize = Constants.ELEMENTS_PER_PAGE,
         prefetchDistance = Constants.ELEMENTS_PER_PAGE / 2,
         initialLoadSize = Constants.ELEMENTS_PER_PAGE

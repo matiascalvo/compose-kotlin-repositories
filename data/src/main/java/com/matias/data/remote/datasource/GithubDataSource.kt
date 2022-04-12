@@ -1,6 +1,7 @@
 package com.matias.data.remote.datasource
 
 import com.matias.data.Constants
+import com.matias.data.remote.RepositoryCache
 import com.matias.data.remote.model.mappers.RepoDtoMapper
 import com.matias.data.remote.model.mappers.RepoResultListDtoMapper
 import com.matias.data.remote.services.SearchServiceApi
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class GithubDataSource @Inject constructor(
     private val service: SearchServiceApi,
     private val repoDtoMapper: RepoDtoMapper,
-    private val resultDtoMapper: RepoResultListDtoMapper
+    private val resultDtoMapper: RepoResultListDtoMapper,
+    private val cache: RepositoryCache
 ) {
 
     suspend fun searchRepositories(
@@ -24,12 +26,16 @@ class GithubDataSource @Inject constructor(
     ): ResultList<Repo> {
         return call {
             val result = service.searchRepositories(query = getKotlinQuery(query), page = page, sortBy = "stars")
-            resultDtoMapper.mapToDomainModel(result)
+            val mappedResult = resultDtoMapper.mapToDomainModel(result)
+            cache.saveRepos(mappedResult.items)
+            mappedResult
         }
     }
 
-    suspend fun getRepository(owner: String, name: String) =
-        call { repoDtoMapper.mapToDomainModel(service.getRepository(owner, name)) }
+    suspend fun getRepository(owner: String, name: String): Repo {
+        val cached = cache.getRepo("$owner/$name")
+        return cached ?: call { repoDtoMapper.mapToDomainModel(service.getRepository(owner, name)) }
+    }
 
     fun isLastPage(currentPage: Int, totalCount: Int) =
         Constants.ELEMENTS_PER_PAGE * (currentPage + 1) > totalCount

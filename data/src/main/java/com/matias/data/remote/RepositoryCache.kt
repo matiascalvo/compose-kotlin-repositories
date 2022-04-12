@@ -1,4 +1,4 @@
-package com.matias.data.repositories
+package com.matias.data.remote
 
 import androidx.collection.LruCache
 import com.matias.domain.model.Repo
