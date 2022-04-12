@@ -1,20 +1,11 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath libs.android.gradlePlugin
-        classpath libs.kotlin.gradlePlugin
-        classpath libs.hilt.gradlePlugin
-    }
-}
-
 plugins {
-    alias(libs.plugins.spotless) apply false
-    alias(libs.plugins.detekt) apply false
-    id 'com.android.library' version '7.1.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    alias libs.plugins.hilt.plugin apply false
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.android.library apply false
+    alias libs.plugins.kotlin.android apply false
+    alias libs.plugins.spotless apply false
+    alias libs.plugins.detekt apply false
+    alias libs.plugins.kotlin.kapt apply false
 }
 
 subprojects {
