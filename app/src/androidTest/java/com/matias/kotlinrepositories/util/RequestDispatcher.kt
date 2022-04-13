@@ -1,9 +1,9 @@
 package com.matias.kotlinrepositories.util
 
-import java.io.InputStreamReader
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
+import java.io.InputStreamReader
 
 class RequestDispatcher : Dispatcher() {
 

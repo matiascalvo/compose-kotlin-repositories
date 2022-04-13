@@ -10,22 +10,11 @@ import androidx.compose.ui.test.performScrollToIndex
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
-import com.matias.kotlinrepositories.util.RequestDispatcher
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
 class HomeScreenIntegrationTest : BaseMockWebserverTest() {
-
-    lateinit var requestDispatcher: RequestDispatcher
-
-    @Before
-    override fun setUp() {
-        super.setUp()
-        requestDispatcher = RequestDispatcher()
-        mockWebServer.dispatcher = requestDispatcher
-    }
 
     @Test
     fun givenNoConnection_Then_NetworkErrorIsDisplayed() {
@@ -38,7 +27,7 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
 
     @Test
     fun givenUnknownError_Then_UnknownErrorIsDisplayed() {
-        requestDispatcher.isEnabled = false
+        disableDispatcher()
         setHomeScreen()
 
         composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.unknown_error_try_again)), true)

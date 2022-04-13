@@ -14,11 +14,11 @@ import com.matias.data.paging.SearchPagingSource
 import com.matias.data.remote.datasource.GithubDataSource
 import com.matias.domain.model.Repo
 import com.matias.domain.repositories.GithubRepository
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class GithubRepositoryImpl @Inject constructor(
     private val githubDatasource: GithubDataSource,

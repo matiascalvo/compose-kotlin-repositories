@@ -9,22 +9,11 @@ import androidx.compose.ui.test.performTextInput
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
-import com.matias.kotlinrepositories.util.RequestDispatcher
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
 class SearchScreenIntegrationTest : BaseMockWebserverTest() {
-
-    lateinit var requestDispatcher: RequestDispatcher
-
-    @Before
-    override fun setUp() {
-        super.setUp()
-        requestDispatcher = RequestDispatcher()
-        mockWebServer.dispatcher = requestDispatcher
-    }
 
     @Test
     fun givenNoSearchTerm_Then_EmptyStateIsShown() {
