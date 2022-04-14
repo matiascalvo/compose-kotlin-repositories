@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.github.kittinunf.result.Result
 import com.matias.core.di.IoDispatcher
+import com.matias.core.utils.EspressoIdlingResource
 import com.matias.data.Constants
 import com.matias.data.local.db.RepoDatabase
 import com.matias.data.local.mappers.RepoDboMapper
@@ -37,7 +38,9 @@ class GithubRepositoryImpl @Inject constructor(
                 mapper = dboMapper,
             ),
             pagingSourceFactory = pagingSourceFactory
-        ).flow.map { page -> page.map { dboMapper.mapToDomainModel(it) } }
+        ).flow.map { page ->
+            EspressoIdlingResource.wrap { page.map { dboMapper.mapToDomainModel(it) } }
+        }
     }
 
     override fun searchKotlinRepos(query: String): Flow<PagingData<Repo>> {

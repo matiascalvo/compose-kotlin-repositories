@@ -2,7 +2,9 @@ package com.matias.kotlinrepositories.util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -13,6 +15,8 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseMockWebserverTest : BaseIdlingTest() {
 
+    @Inject
+    protected lateinit var okHttp: OkHttpClient
     protected val mockWebServer = MockWebServer()
 
     private lateinit var requestDispatcher: RequestDispatcher

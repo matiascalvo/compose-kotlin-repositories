@@ -1,13 +1,12 @@
 package com.matias.kotlinrepositories.ui.navigation
 
 import androidx.compose.ui.test.hasContentDescription
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.matias.kotlinrepositories.R
-import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertEquals
@@ -68,7 +67,7 @@ class NavigationKtTest : BaseMockWebserverTest() {
     }
 
     private fun clickFirstItem() {
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).onChildAt(0).performClick()
+        composeTestRule.onNode(hasScrollAction()).onChildAt(0).performClick()
     }
 
     private fun clickSearch() {
@@ -86,5 +85,6 @@ class NavigationKtTest : BaseMockWebserverTest() {
             navController = rememberNavController()
             Navigation(navController)
         }
+        composeTestRule.waitForIdle()
     }
 }

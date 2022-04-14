@@ -24,8 +24,6 @@ import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.EmptyQuerySearchScreen
 import com.matias.kotlinrepositories.ui.composables.PaginatedRepoList
 
-const val SCROLL_TO_TOP_TEST_TAG = "scroll_to_top_test_tag"
-
 @Composable
 fun HomeScreen(
     onDetails: (Repo) -> Unit = {},

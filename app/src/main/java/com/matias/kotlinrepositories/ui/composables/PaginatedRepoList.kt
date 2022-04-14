@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -34,9 +33,6 @@ import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.paging.ErrorItem
 import com.matias.kotlinrepositories.ui.composables.paging.LoadingItem
 import kotlinx.coroutines.launch
-
-const val REPO_LIST = "REPO_LIST"
-const val SCROLL_TO_TOP_TEST_TAG = "scroll_to_top_test_tag"
 
 @Composable
 fun PaginatedRepoList(
@@ -54,7 +50,6 @@ fun PaginatedRepoList(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
-                .testTag(REPO_LIST)
         ) {
             items(items) { item ->
                 item?.let {
@@ -109,9 +104,8 @@ private fun ScrollToTopButton(listState: LazyListState) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
-                .testTag(SCROLL_TO_TOP_TEST_TAG)
         ) {
-            Icon(Icons.Default.ArrowUpward, contentDescription = null)
+            Icon(Icons.Default.ArrowUpward, contentDescription = stringResource(id = R.string.scroll_to_top))
         }
     }
 }

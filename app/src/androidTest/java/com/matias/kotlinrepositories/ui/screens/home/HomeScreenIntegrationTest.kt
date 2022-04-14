@@ -2,13 +2,14 @@ package com.matias.kotlinrepositories.ui.screens.home
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import com.matias.kotlinrepositories.R
-import com.matias.kotlinrepositories.ui.composables.REPO_LIST
 import com.matias.kotlinrepositories.util.BaseMockWebserverTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -35,10 +36,10 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     }
 
     @Test
-    fun givenNoSearchTerm_Then_CorrectDataIsDisplayed() {
+    fun whenScreenLoads_Then_CorrectDataIsDisplayed() {
         setHomeScreen()
 
-        val lazyColumn = composeTestRule.onNode(hasTestTag(REPO_LIST))
+        val lazyColumn = composeTestRule.onNode(hasScrollAction())
 
         lazyColumn.onChildAt(0).assert(hasText("square/okhttp")).assertIsDisplayed()
         lazyColumn.onChildAt(1).assert(hasText("JetBrains/kotlin")).assertIsDisplayed()
@@ -46,32 +47,39 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
     }
 
     @Test
-    fun givenNoSearchTerm_When_ScrolledDown_Then_ScrollUpButtonAppears() {
+    fun when_ScrolledDown_Then_ScrollUpButtonAppears() {
         setHomeScreen()
 
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(10)
+        composeTestRule.onNode(hasScrollAction()).performScrollToIndex(10)
 
-        composeTestRule.onNode(hasTestTag(SCROLL_TO_TOP_TEST_TAG)).assertIsDisplayed()
+        composeTestRule.onNode(hasScrollAction()).onChildren()
+
+        composeTestRule.onNode(hasContentDescription(getString(R.string.scroll_to_top))).assertIsDisplayed()
     }
 
     @Test
-    fun givenNoSearchTermAndScrolledDown_When_ClickOnScrollUpButton_Then_FirstItemIsDisplayed() {
+    fun when_ClickOnScrollUpButton_Then_FirstItemIsDisplayed() {
         setHomeScreen()
 
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(10)
-        composeTestRule.onNode(hasTestTag(SCROLL_TO_TOP_TEST_TAG)).performClick()
+        val scrollable = composeTestRule.onNode(hasScrollAction())
 
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).onChildAt(0).assert(hasText("square/okhttp"))
+        scrollable.performScrollToIndex(10)
+
+        composeTestRule.onNode(hasContentDescription(getString(R.string.scroll_to_top))).performClick()
+
+        scrollable.onChildAt(0).assert(hasText("square/okhttp"))
     }
 
     @Test
-    fun givenNoSearchTerm_When_ScrolledToLastElement_Then_NextPageIsLoadedAndFirstElementOfNextPageIsCorrect() {
+    fun when_ScrolledToLastElement_Then_NextPageIsLoadedAndFirstElementOfNextPageIsCorrect() {
         setHomeScreen()
 
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(29)
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).performScrollToIndex(30)
+        val scrollable = composeTestRule.onNode(hasScrollAction())
 
-        composeTestRule.onNode(hasTestTag(REPO_LIST)).onChildAt(0)
+        scrollable.performScrollToIndex(29)
+        scrollable.performScrollToIndex(30)
+
+        scrollable.onChildAt(0)
             .assert(hasText("YiiGuxing/TranslationPlugin"))
     }
 
@@ -79,5 +87,6 @@ class HomeScreenIntegrationTest : BaseMockWebserverTest() {
         composeTestRule.setContent {
             HomeScreen()
         }
+        composeTestRule.waitForIdle()
     }
 }
