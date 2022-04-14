@@ -6,6 +6,8 @@ plugins {
     alias libs.plugins.spotless apply false
     alias libs.plugins.detekt apply false
     alias libs.plugins.kotlin.kapt apply false
+    alias libs.plugins.toml.checker
+    alias libs.plugins.toml.updater
 }
 
 subprojects {
@@ -31,3 +33,4 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+apply from: "${project.rootDir}/buildscripts/toml-updater-config.gradle"

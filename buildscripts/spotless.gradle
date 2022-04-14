@@ -1,8 +1,8 @@
 apply plugin: 'com.diffplug.spotless'
 spotless {
 
-    format 'androidXml', {
-        target '**/AndroidManifest.xml', 'src/**/*.xml'
+    format 'text', {
+        target '**/AndroidManifest.xml', 'src/**/*.xml', '*.toml'
         targetExclude '**/mergedManifests/**/AndroidManifest.xml',
                 '**/build/**/*.xml', '**/drawable*/*.xml', '**/mipmap*/*.xml'
         indentWithSpaces()
