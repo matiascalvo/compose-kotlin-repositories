@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.matias.domain.usecases.GetPagedKotlinReposUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
+import kotlinx.coroutines.FlowPreview
 
 @OptIn(FlowPreview::class)
 @HiltViewModel

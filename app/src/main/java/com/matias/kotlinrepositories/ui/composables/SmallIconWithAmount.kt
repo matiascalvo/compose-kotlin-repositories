@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.matias.domain.model.fakeRepo1
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 
@@ -52,7 +51,7 @@ private fun Preview() {
     KotlinRepositoriesTheme {
         Surface {
             SmallIconWithAmount(
-                text = fakeRepo1.stars.toString(),
+                text = 45001.toString(),
                 painter = rememberVectorPainter(image = Icons.Default.Star),
                 contentDescription = stringResource(id = R.string.stars)
             )

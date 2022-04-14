@@ -2,12 +2,13 @@ package com.matias.kotlinrepositories.ui.composables
 
 import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.onChildren
-import com.matias.domain.model.fakeRepo1
+import androidx.compose.ui.test.onSiblings
+import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 import com.matias.kotlinrepositories.util.BaseComposeTest
+import com.matias.kotlinrepositories.util.DataProvider
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +16,7 @@ import org.junit.Test
 @HiltAndroidTest
 class RepoListItemKtTest : BaseComposeTest() {
 
-    private val repo = fakeRepo1
+    private val repo = DataProvider.provideRepo()
 
     @Before
     override fun setUp() {
@@ -29,14 +30,14 @@ class RepoListItemKtTest : BaseComposeTest() {
 
     @Test
     fun stars_element_displays_stars_number() {
-        val stars = composeTestRule.onNode(hasTestTag("stars"), true)
-        stars.onChildren().assertAny(hasText(repo.stars.toString()))
+        val stars = composeTestRule.onNode(hasContentDescription(getString(R.string.stars)), true)
+        stars.onSiblings().assertAny(hasText(repo.stars.toString()))
     }
 
     @Test
     fun fork_element_displays_forks_number() {
-        val stars = composeTestRule.onNode(hasTestTag("forks"), true)
-        stars.onChildren().assertAny(hasText(repo.forks.toString()))
+        val stars = composeTestRule.onNode(hasContentDescription(getString(R.string.forks)), true)
+        stars.onSiblings().assertAny(hasText(repo.forks.toString()))
     }
 
     @Test

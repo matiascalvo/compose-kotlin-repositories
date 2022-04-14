@@ -9,10 +9,10 @@ import com.matias.domain.usecases.GetRepoUseCase
 import com.matias.kotlinrepositories.ui.extensions.getScreenStatusDependingOnError
 import com.matias.kotlinrepositories.ui.screens.ScreenStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(

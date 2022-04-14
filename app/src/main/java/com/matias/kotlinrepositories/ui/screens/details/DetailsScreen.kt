@@ -38,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.matias.domain.model.Repo
-import com.matias.domain.model.fakeRepo2
+import com.matias.domain.model.User
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.composables.LoadingScreen
 import com.matias.kotlinrepositories.ui.composables.NavigateUp
@@ -176,7 +176,26 @@ private fun DescriptionItem(title: Int, content: String) {
 private fun Preview() {
     KotlinRepositoriesTheme() {
         Surface {
-            DetailsScreen(fakeRepo2)
+            DetailsScreen(
+                Repo(
+                    id = 1,
+                    name = "kotlinReallyReallyReallyLargeName",
+                    fullName = "jetbrains/kotlinReallyReallyReallyLargeName",
+                    owner = User(
+                        login = "jetbrains",
+                        avatarUrl = "https://avatars.githubusercontent.com/u/878437?v=4"
+                    ),
+                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
+                        "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " +
+                        "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " +
+                        "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla " +
+                        "pariatur.",
+                    url = "https://github.com/JetBrains/kotlasdasdasdadasin",
+                    homepage = "https://kotladasdasdasdasdasdasdasinlang.org",
+                    stars = 40550,
+                    forks = 4998
+                )
+            )
         }
     }
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.matias.domain.model.Repo
-import com.matias.domain.model.fakeRepo1
+import com.matias.domain.model.User
 import com.matias.kotlinrepositories.R
 import com.matias.kotlinrepositories.ui.theme.KotlinRepositoriesTheme
 
@@ -71,13 +70,11 @@ private fun RepoContent(repo: Repo) {
     Column {
         Text(text = repo.fullName, maxLines = 1, overflow = TextOverflow.Ellipsis)
         SmallIconWithAmount(
-            modifier = Modifier.testTag("stars"),
             text = repo.stars.toString(),
             painter = rememberVectorPainter(image = Icons.Default.Star),
             contentDescription = stringResource(id = R.string.stars)
         )
         SmallIconWithAmount(
-            modifier = Modifier.testTag("forks"),
             text = repo.forks.toString(),
             painter = painterResource(id = R.drawable.ic_fork),
             contentDescription = stringResource(id = R.string.forks)
@@ -96,6 +93,16 @@ private fun RepoContent(repo: Repo) {
 @Composable
 private fun Preview() {
     KotlinRepositoriesTheme {
-        RepoListItem(repo = fakeRepo1)
+        RepoListItem(
+            repo = Repo(
+                id = 1,
+                name = "okhttp",
+                fullName = "square/okhttp",
+                owner = User(
+                    login = "square",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/82592?v=4"
+                )
+            )
+        )
     }
 }
